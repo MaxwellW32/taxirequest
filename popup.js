@@ -11,9 +11,12 @@ import { getElement, setChromeStorage } from "./utility.js";
 //
 //
 async function popup() {
-    const startButton = getElement("#myButton");
+    const startButton = getElement("#startButton");
+    const stopButton = getElement("#stopButton");
     startButton.addEventListener("click", async () => {
         try {
+            //show stop button
+            stopButton.style.display = "block";
             const shiftText = getElement("#shiftText"); //get textarea input
             if (shiftText.value === "")
                 throw new Error("need to enter shift schedule"); //ensure shift text is there
@@ -47,6 +50,10 @@ async function popup() {
             const seenError = error;
             alert(seenError.message);
         }
+    });
+    stopButton.addEventListener("click", async () => {
+        //stop automation
+        chrome.runtime.sendMessage({ type: 'STOP_AUTOMATION' });
     });
 }
 popup();

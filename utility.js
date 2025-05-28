@@ -37,3 +37,8 @@ export async function getChromeStorage(key) {
         });
     });
 }
+export async function wait(time = 2000) {
+    await new Promise((resolve) => setTimeout(() => {
+        resolve(true);
+    }, time));
+}

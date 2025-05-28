@@ -68,3 +68,8 @@ export async function getChromeStorage<T>(key: string): Promise<T | undefined> {
     })
 }
 
+export async function wait(time = 2000) {
+    await new Promise((resolve) => setTimeout(() => {
+        resolve(true)
+    }, time))
+}

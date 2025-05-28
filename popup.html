@@ -12,15 +12,23 @@
     <h2>taxi request Status</h2>
 
     <h3>Paste your shift data here:</h3>
-    <textarea id="shiftText" rows="10" cols="30"></textarea>
+    <textarea id="shiftText" rows="10" cols="30">9/20/2024	e
+9/21/2024	e
+9/22/2024	e
+9/25/2024	n
+9/26/2024	n
+9/27/2024	n
+9/30/2024	e
+</textarea>
 
     <form id="serviceForm">
         <!-- Reasoning -->
         <label>Reason for Evening Shift:</label><br>
-        <input type="text" id="reasonEvening" placeholder="2pm - 10pm coverage" value="" /><br><br>
+        <input type="text" id="reasonEvening" placeholder="e.g 2pm - 10pm coverage"
+            value="2pm - 10pm coverage" /><br><br>
 
         <label>Reason for Night Shift:</label><br>
-        <input type="text" id="reasonNight" placeholder="10pm - 6am coverage" value="" /><br><br>
+        <input type="text" id="reasonNight" placeholder="e.g 10pm - 6am coverage" value="10pm - 6am coverage" /><br><br>
 
         <!-- Rate -->
         <label>Rate (950 or 2000):</label><br>
@@ -31,13 +39,14 @@
         <input type="text" id="from" value="JAMICTA" /><br><br>
 
         <label>To:</label><br>
-        <input type="text" id="to" value="" /><br><br>
+        <input type="text" id="to" value="55 Hillview Terrace" /><br><br>
 
         <label>Purpose:</label><br>
         <input type="text" id="purpose" value="taxi transport" /><br><br>
     </form>
 
-    <button id="myButton">start</button>
+    <button id="startButton">start</button>
+    <button id="stopButton" style="display: none;">stop</button>
 </body>
 
 </html>
