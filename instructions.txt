@@ -22,13 +22,13 @@ The extension is now installed
 Running the extension:
 
 1.
-Click the extension on the myhrplus page after making a new taxi request (don't need to fill out anything else on my hr, leave it to the extension)
+Click the extension on the myhrplus page after making a new taxi request (don't need to fill out anything else on my hr, leave it to the extension).
 
 2.
-Click the extension
+Click the extension.
 
 3.
-Fill out the form with your schedule - date (mm/dd/yyyy) and shift(e/n) - easier to make a table in excel with this info, then just copy and paste it to the schedule input in the extension. an example excel document is also attached
+Fill out the form with your schedule - date (mm/dd/yyyy) and shift(e/n) - easier to make a table in excel with this info, then just copy and paste it to the schedule input in the extension. an example excel document is also attached.
 
 e.g this is what the schedule input will look like when copied from an excel table
 9/20/2024	e
@@ -42,4 +42,4 @@ Fill out the rest of the form in the extension with your wanted info - whatever 
 5. 
 Press start and watch it go. 
 Can leave it to run in the background.
-If stopped just remove the shift entries you don't want it to redo, and play
+If stopped just remove the shift entries you don't want it to redo, and play.
