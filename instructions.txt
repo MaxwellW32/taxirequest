@@ -28,7 +28,7 @@ Click the extension on the myhrplus page after making a new taxi request (don't 
 Click the extension
 
 3.
-Fill out the form with your schedule - date (mm/dd/yyyy) and shift(e/n) - easier to make a table in excel with this info, then just copy and paste it to the schedule input in the extension.
+Fill out the form with your schedule - date (mm/dd/yyyy) and shift(e/n) - easier to make a table in excel with this info, then just copy and paste it to the schedule input in the extension. an example excel document is also attached
 
 e.g this is what the schedule input will look like when copied from an excel table
 9/20/2024	e
