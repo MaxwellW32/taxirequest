@@ -109,6 +109,9 @@ async function runAutomationLoop() {
                         const formattedDate = `${year}/${month}/${day}`;
                         //adding to the date field
                         seenDateElement.value = formattedDate;
+                        // Trigger events to notify the system
+                        seenDateElement.dispatchEvent(new Event('change', { bubbles: true }));
+                        seenDateElement.dispatchEvent(new Event('blur', { bubbles: true })); // simulate leaving the field
                     },
                     "inputNatureOfService": async (eachRecord) => {
                         const seenNatureOfServiceInput = document.querySelector('#ValPurpose');
