@@ -23,6 +23,10 @@
             ]
         }
     ],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
     "action": {
         "default_title": "Automate taxi request",
         "default_popup": "popup.html",

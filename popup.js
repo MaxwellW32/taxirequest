@@ -1,22 +1,19 @@
+import { checklist } from "./background.js";
 import { getElement, setChromeStorage } from "./utility.js";
-//all the steps required to fill out the webpage
-const checklist = [
-    {
-        funcKey: "getInsertButton",
-        success: undefined
-    },
-    {
-        funcKey: "inputText",
-        success: undefined
-    },
-];
+//button click starts the background worker
+//on loop it calls the content script until user stopped - storage state
+//content script pullls from storage and goes to the latest record, and latest automation
+//saves changes
+//loops by sending another signal
+//to do
+//ensure the script keeps running on page change - if not use storage state, read and adapt
+//
+//
+//
 async function popup() {
     const startButton = getElement("#myButton");
     startButton.addEventListener("click", async () => {
         try {
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tab.id === undefined)
-                throw new Error("not seeing tab id");
             const shiftText = getElement("#shiftText"); //get textarea input
             if (shiftText.value === "")
                 throw new Error("need to enter shift schedule"); //ensure shift text is there
@@ -25,12 +22,11 @@ async function popup() {
             //go over each line and add to shifts
             lines.forEach(eachLine => {
                 const [dateStr, shiftPre] = eachLine.trim().split(/\t+/);
-                const date = new Date(dateStr);
                 //add to shifts
                 const shift = shiftPre.toLowerCase();
                 if (shift !== "e" && shift !== "n")
                     throw new Error("wrong input entered for shift e/n only");
-                records.push({ date, shift, successful: undefined });
+                records.push({ date: dateStr, shift, successful: undefined });
             });
             //get other fields
             const formInfo = getAndValidateForm();
@@ -43,88 +39,8 @@ async function popup() {
                 records: records
             };
             await setChromeStorage("allStorageObj", allStorageObj);
-            //content on tab
-            chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                func: async () => {
-                    try {
-                        console.clear();
-                        const functionMap = {
-                            "getInsertButton": async () => {
-                                const rows = document.querySelectorAll('div.row');
-                                let foundTaxiHeading = false;
-                                rows.forEach(row => {
-                                    const h2 = row.querySelector('h2');
-                                    if (h2 && h2.innerText.toLowerCase().includes('taxi')) {
-                                        foundTaxiHeading = true;
-                                        // Search all buttons in the row
-                                        const buttons = row.querySelectorAll('button');
-                                        let clicked = false;
-                                        buttons.forEach(button => {
-                                            if (button.hasAttribute('href')) {
-                                                clicked = true;
-                                                console.log('Clicking button with href:', button);
-                                                button.click();
-                                            }
-                                        });
-                                        if (!clicked) {
-                                            console.warn(`not seeing input button to click`);
-                                        }
-                                    }
-                                });
-                                if (!foundTaxiHeading)
-                                    throw new Error("not seeing taxi heading");
-                            },
-                            "inputText": async () => {
-                                console.log(`$2`);
-                            }
-                        };
-                        const seenAllStorageObj = await getAllStorageObj();
-                        if (seenAllStorageObj === undefined)
-                            throw new Error("not seeing seenAllStorageObj");
-                        console.log(`$seenAllStorageObj`, seenAllStorageObj);
-                        //go over each record and do the checklist
-                        for (let index = 0; index < seenAllStorageObj.records.length; index++) {
-                            const eachRecord = seenAllStorageObj.records[index]; //e/g 09/20/2024 e undefined
-                            //carry out each checklist item for the record
-                            for (let smallIndex = 0; smallIndex < seenAllStorageObj.checklist.length; smallIndex++) {
-                                const eachChecklistItem = seenAllStorageObj.checklist[smallIndex]; //each 
-                                const seenFuncToRun = functionMap[eachChecklistItem.funcKey];
-                                if (seenFuncToRun === undefined)
-                                    throw new Error("invalid function key");
-                                //run the function
-                                await seenFuncToRun();
-                                //write updated checklist to storage - updated success
-                                seenAllStorageObj.checklist[smallIndex].success = true;
-                                await setAllStorageObj(seenAllStorageObj);
-                            }
-                        }
-                        async function getAllStorageObj() {
-                            return new Promise((resolve) => {
-                                chrome.storage.local.get(["allStorageObj"]).then((res) => {
-                                    const value = res["allStorageObj"];
-                                    if (value === undefined) {
-                                        resolve(undefined);
-                                    }
-                                    else {
-                                        resolve(value);
-                                    }
-                                });
-                            });
-                        }
-                        async function setAllStorageObj(allStorageObj) {
-                            return new Promise((resolve) => {
-                                chrome.storage.local.set({ ["allStorageObj"]: allStorageObj }, resolve);
-                            });
-                        }
-                    }
-                    catch (error) {
-                        console.log(`$error happened in executeScript`, error);
-                        const seenError = error;
-                        alert(seenError.message);
-                    }
-                },
-            });
+            //start automation
+            chrome.runtime.sendMessage({ type: 'START_AUTOMATION' });
         }
         catch (error) {
             console.log(`$error happened in popup`, error);
