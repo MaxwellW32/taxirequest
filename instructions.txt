@@ -1,0 +1,21 @@
+🛠️ How to Install the Extension Locally
+Download the extension files
+👉 Go to the GitHub link I shared and click the green “Code” button, then select “Download ZIP”.
+
+Extract the ZIP
+📂 Right-click the ZIP file you downloaded and choose “Extract All…”.
+You’ll get a folder with the extension files inside.
+
+Open Chrome Extensions page
+🌐 In Google Chrome, go to:
+
+chrome://extensions/
+Turn on Developer Mode
+🧩 In the top right corner, toggle “Developer mode” ON.
+
+Load the extension
+➕ Click “Load unpacked”
+📁 Then select the extracted folder (not the ZIP file — the folder inside it).
+
+You're all set! 🎉
+The extension is now installed and will start working automatically during the monitoring hours.

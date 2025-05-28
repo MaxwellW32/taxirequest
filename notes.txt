@@ -1,0 +1,22 @@
+    "content_scripts": [
+        {
+            "js": [
+                "out/content.js"
+            ],
+            "matches": [
+                "https://gentax-external.ads.taj.gov.jm/Monitoring/*"
+            ]
+        }
+    ],
+
+    "background": {},
+
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "content.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        },]
