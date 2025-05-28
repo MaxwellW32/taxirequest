@@ -1,3 +1,4 @@
+import { getChromeStorage, setChromeStorage } from "./utility.js";
 const TARGET_URL = "https://ss.myhrplus.gov.jm/MyHrPlusSS";
 //all the steps required to fill out the webpage
 export const checklist = [
@@ -306,6 +307,8 @@ async function runAutomationLoop() {
                             });
                             if (!foundTaxiHeading)
                                 throw new Error("not seeing taxi heading");
+                            //set time to wait
+                            await setWaitTimeStorageObj(2000);
                         },
                         "inputDate": async (eachRecord) => {
                             const seenDateElement = document.querySelector('#ValDate');
@@ -321,6 +324,8 @@ async function runAutomationLoop() {
                             // Trigger events to notify the system
                             seenDateElement.dispatchEvent(new Event('change', { bubbles: true }));
                             seenDateElement.dispatchEvent(new Event('blur', { bubbles: true })); // simulate leaving the field
+                            //set time to wait
+                            await setWaitTimeStorageObj(100);
                         },
                         "inputNatureOfService": async (eachRecord) => {
                             const seenNatureOfServiceInput = document.querySelector('#ValPurpose');
@@ -328,6 +333,8 @@ async function runAutomationLoop() {
                                 throw new Error("not seeing seenNatureOfServiceInput element");
                             //adding to the seenNatureOfServiceInput field
                             seenNatureOfServiceInput.value = eachRecord.shift === "e" ? seenAllStorageObj.formInfo.reasonEvening : seenAllStorageObj.formInfo.reasonNight;
+                            //set time to wait
+                            await setWaitTimeStorageObj(100);
                         },
                         "inputRate": async () => {
                             const rateSelectElement = document.querySelector('#ValCodclaim');
@@ -340,6 +347,8 @@ async function runAutomationLoop() {
                                 throw new Error("not seeing expected rate text");
                             // Set the value on the <select>
                             rateSelectElement.value = matchingOption.value;
+                            //set time to wait
+                            await setWaitTimeStorageObj(100);
                         },
                         "clickInsertTripsButton": async () => {
                             let foundTripsHeading = false;
@@ -365,6 +374,8 @@ async function runAutomationLoop() {
                             });
                             if (!foundTripsHeading)
                                 throw new Error("not seeing trips heading");
+                            //set time to wait
+                            await setWaitTimeStorageObj(2000);
                         },
                         "inputFrom": async () => {
                             const seenFromInput = document.querySelector('#ValFrom');
@@ -372,6 +383,8 @@ async function runAutomationLoop() {
                                 throw new Error("not seeing seenFromInput element");
                             //adding to the seenFromInput field
                             seenFromInput.value = seenAllStorageObj.formInfo.from;
+                            //set time to wait
+                            await setWaitTimeStorageObj(100);
                         },
                         "inputTo": async () => {
                             const seenToInput = document.querySelector('#ValTo');
@@ -379,6 +392,8 @@ async function runAutomationLoop() {
                                 throw new Error("not seeing seenToInput element");
                             //adding to the seenToInput field
                             seenToInput.value = seenAllStorageObj.formInfo.to;
+                            //set time to wait
+                            await setWaitTimeStorageObj(100);
                         },
                         "inputPurpose": async () => {
                             const seenPurposeInput = document.querySelector('#ValPurpose');
@@ -386,12 +401,16 @@ async function runAutomationLoop() {
                                 throw new Error("not seeing seenPurposeInput element");
                             //adding to the seenPurposeInput field
                             seenPurposeInput.value = seenAllStorageObj.formInfo.purpose;
+                            //set time to wait
+                            await setWaitTimeStorageObj(100);
                         },
                         "clickSaveButton": async () => {
                             const submitButton = document.querySelector('button[type="submit"]');
                             if (submitButton === null)
                                 throw new Error("not seeing submitButton");
                             submitButton.click();
+                            //set time to wait
+                            await setWaitTimeStorageObj(2000);
                         },
                     };
                     const nextRecordIndex = seenAllStorageObj.records.findIndex(r => !r.successful);
@@ -438,12 +457,30 @@ async function runAutomationLoop() {
                         chrome.storage.local.set({ allStorageObj }, resolve);
                     });
                 }
+                // async function getWaitTimeStorageObj(): Promise<number | undefined> {
+                //     return new Promise((resolve) => {
+                //         chrome.storage.local.get(["wait"]).then((res) => {
+                //             resolve(res["wait"]);
+                //         });
+                //     });
+                // }
+                async function setWaitTimeStorageObj(wait) {
+                    return new Promise((resolve) => {
+                        chrome.storage.local.set({ wait }, resolve);
+                    });
+                }
             },
         });
     });
     if (!canContinue)
         return;
-    await wait(); // your delay function
+    let seenTimeToWait = await getChromeStorage("wait");
+    if (seenTimeToWait === undefined) {
+        //set to starter val
+        seenTimeToWait = 2000;
+        await setChromeStorage("wait", seenTimeToWait);
+    }
+    await wait(seenTimeToWait); // your delay function
     runAutomationLoop();
 }
 async function getRunningStatus() {

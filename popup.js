@@ -1,15 +1,5 @@
 import { checklist } from "./background.js";
 import { getElement, setChromeStorage } from "./utility.js";
-//button click starts the background worker
-//on loop it calls the content script until user stopped - storage state
-//content script pullls from storage and goes to the latest record, and latest automation
-//saves changes
-//loops by sending another signal
-//to do
-//ensure the script keeps running on page change - if not use storage state, read and adapt
-//
-//
-//
 async function popup() {
     const startButton = getElement("#startButton");
     const stopButton = getElement("#stopButton");
@@ -17,6 +7,7 @@ async function popup() {
         try {
             //show stop button
             stopButton.style.display = "block";
+            startButton.style.display = "none";
             const shiftText = getElement("#shiftText"); //get textarea input
             if (shiftText.value === "")
                 throw new Error("need to enter shift schedule"); //ensure shift text is there
@@ -52,6 +43,8 @@ async function popup() {
         }
     });
     stopButton.addEventListener("click", async () => {
+        startButton.style.display = "block";
+        stopButton.style.display = "none";
         //stop automation
         chrome.runtime.sendMessage({ type: 'STOP_AUTOMATION' });
     });

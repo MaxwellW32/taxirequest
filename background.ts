@@ -1,3 +1,5 @@
+import { getChromeStorage, setChromeStorage } from "./utility.js";
+
 const TARGET_URL = "https://ss.myhrplus.gov.jm/MyHrPlusSS";
 
 export type rateType = 950 | 2000
@@ -405,6 +407,9 @@ async function runAutomationLoop() {
                             });
 
                             if (!foundTaxiHeading) throw new Error("not seeing taxi heading")
+
+                            //set time to wait
+                            await setWaitTimeStorageObj(2000)
                         },
                         "inputDate": async (eachRecord: recordType) => {
                             const seenDateElement: HTMLInputElement | null = document.querySelector('#ValDate');
@@ -423,6 +428,8 @@ async function runAutomationLoop() {
                             seenDateElement.dispatchEvent(new Event('change', { bubbles: true }));
                             seenDateElement.dispatchEvent(new Event('blur', { bubbles: true })); // simulate leaving the field
 
+                            //set time to wait
+                            await setWaitTimeStorageObj(100)
                         },
                         "inputNatureOfService": async (eachRecord: recordType) => {
                             const seenNatureOfServiceInput: HTMLInputElement | null = document.querySelector('#ValPurpose');
@@ -430,6 +437,9 @@ async function runAutomationLoop() {
 
                             //adding to the seenNatureOfServiceInput field
                             seenNatureOfServiceInput.value = eachRecord.shift === "e" ? seenAllStorageObj.formInfo.reasonEvening : seenAllStorageObj.formInfo.reasonNight
+
+                            //set time to wait
+                            await setWaitTimeStorageObj(100)
                         },
                         "inputRate": async () => {
                             const rateSelectElement: HTMLSelectElement | null = document.querySelector('#ValCodclaim');
@@ -446,6 +456,9 @@ async function runAutomationLoop() {
 
                             // Set the value on the <select>
                             rateSelectElement.value = matchingOption.value;
+
+                            //set time to wait
+                            await setWaitTimeStorageObj(100)
                         },
                         "clickInsertTripsButton": async () => {
                             let foundTripsHeading = false
@@ -478,6 +491,9 @@ async function runAutomationLoop() {
                             });
 
                             if (!foundTripsHeading) throw new Error("not seeing trips heading")
+
+                            //set time to wait
+                            await setWaitTimeStorageObj(2000)
                         },
                         "inputFrom": async () => {
                             const seenFromInput: HTMLInputElement | null = document.querySelector('#ValFrom');
@@ -485,6 +501,9 @@ async function runAutomationLoop() {
 
                             //adding to the seenFromInput field
                             seenFromInput.value = seenAllStorageObj.formInfo.from
+
+                            //set time to wait
+                            await setWaitTimeStorageObj(100)
                         },
                         "inputTo": async () => {
                             const seenToInput: HTMLInputElement | null = document.querySelector('#ValTo');
@@ -492,6 +511,9 @@ async function runAutomationLoop() {
 
                             //adding to the seenToInput field
                             seenToInput.value = seenAllStorageObj.formInfo.to
+
+                            //set time to wait
+                            await setWaitTimeStorageObj(100)
                         },
                         "inputPurpose": async () => {
                             const seenPurposeInput: HTMLTextAreaElement | null = document.querySelector('#ValPurpose');
@@ -499,12 +521,18 @@ async function runAutomationLoop() {
 
                             //adding to the seenPurposeInput field
                             seenPurposeInput.value = seenAllStorageObj.formInfo.purpose
+
+                            //set time to wait
+                            await setWaitTimeStorageObj(100)
                         },
                         "clickSaveButton": async () => {
                             const submitButton: HTMLButtonElement | null = document.querySelector('button[type="submit"]');
                             if (submitButton === null) throw new Error("not seeing submitButton")
 
                             submitButton.click()
+
+                            //set time to wait
+                            await setWaitTimeStorageObj(2000)
                         },
                     }
 
@@ -559,13 +587,34 @@ async function runAutomationLoop() {
                         chrome.storage.local.set({ allStorageObj }, resolve);
                     });
                 }
+
+                // async function getWaitTimeStorageObj(): Promise<number | undefined> {
+                //     return new Promise((resolve) => {
+                //         chrome.storage.local.get(["wait"]).then((res) => {
+                //             resolve(res["wait"]);
+                //         });
+                //     });
+                // }
+
+                async function setWaitTimeStorageObj(wait: number): Promise<void> {
+                    return new Promise((resolve) => {
+                        chrome.storage.local.set({ wait }, resolve);
+                    });
+                }
             },
         });
     });
 
     if (!canContinue) return;
 
-    await wait(); // your delay function
+    let seenTimeToWait = await getChromeStorage<number>("wait")
+    if (seenTimeToWait === undefined) {
+        //set to starter val
+        seenTimeToWait = 2000
+        await setChromeStorage("wait", seenTimeToWait)
+    }
+
+    await wait(seenTimeToWait); // your delay function
     runAutomationLoop();
 }
 

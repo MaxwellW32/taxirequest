@@ -55,8 +55,8 @@ export async function setChromeStorage<T>(key: string, value: T): Promise<void> 
 export async function getChromeStorage<T>(key: string): Promise<T | undefined> {
 
     return new Promise((resolve) => {
-        chrome.storage.local.get(["test"]).then((res) => {
-            const value = res["test"];
+        chrome.storage.local.get([key]).then((res) => {
+            const value = res[key];
 
             if (value === undefined) {
                 resolve(undefined);
