@@ -8,7 +8,6 @@ You’ll get a folder with the extension files inside.
 
 Open Chrome Extensions page
 🌐 In Google Chrome, go to:
-
 chrome://extensions/
 Turn on Developer Mode
 🧩 In the top right corner, toggle “Developer mode” ON.
@@ -18,4 +17,29 @@ Load the extension
 📁 Then select the extracted folder (not the ZIP file — the folder inside it).
 
 You're all set! 🎉
-The extension is now installed and will start working automatically during the monitoring hours.
+The extension is now installed
+
+Running the extension:
+
+1.
+Click the extension on the myhrplus page after making a new taxi request (don't need to fill out anything else on my hr, leave it to the extension)
+
+2.
+Click the extension
+
+3.
+Fill out the form with your schedule - date (mm/dd/yyyy) and shift(e/n) - easier to make a table in excel with this info, then just copy and paste it to the schedule input in the extension.
+
+e.g this is what the schedule input will look like when copied from an excel table
+9/20/2024	e
+9/21/2024	e
+9/22/2024	e
+9/25/2024	n
+
+4.
+Fill out the rest of the form in the extension with your wanted info - whatever you'd normally enter into my hr for the fields. i.e nature of service (reason for evening/night shift form input) will change based on your shift. 
+
+5. 
+Press start and watch it go. 
+Can leave it to run in the background.
+If stopped just remove the shift entries you don't want it to redo, and play
