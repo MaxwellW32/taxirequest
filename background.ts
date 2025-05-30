@@ -495,22 +495,22 @@ async function runAutomationLoop() {
                             //set time to wait
                             await setWaitTimeStorageObj(2000)
                         },
-                        "inputFrom": async () => {
+                        "inputFrom": async (eachRecord: recordType) => {
                             const seenFromInput: HTMLInputElement | null = document.querySelector('#ValFrom');
                             if (seenFromInput === null) throw new Error("not seeing seenFromInput element")
 
                             //adding to the seenFromInput field
-                            seenFromInput.value = seenAllStorageObj.formInfo.from
+                            seenFromInput.value = eachRecord.shift === "e" ? seenAllStorageObj.formInfo.from : seenAllStorageObj.formInfo.to
 
                             //set time to wait
                             await setWaitTimeStorageObj(100)
                         },
-                        "inputTo": async () => {
+                        "inputTo": async (eachRecord: recordType) => {
                             const seenToInput: HTMLInputElement | null = document.querySelector('#ValTo');
                             if (seenToInput === null) throw new Error("not seeing seenToInput element")
 
                             //adding to the seenToInput field
-                            seenToInput.value = seenAllStorageObj.formInfo.to
+                            seenToInput.value = eachRecord.shift === "e" ? seenAllStorageObj.formInfo.to : seenAllStorageObj.formInfo.from
 
                             //set time to wait
                             await setWaitTimeStorageObj(100)
